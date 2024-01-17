@@ -1,6 +1,7 @@
 name: SCA Agent-Based Scan
 on: 
   workflow_dispatch:
+  pull_request:
 
 jobs:
   veracode-sca-task:
@@ -17,5 +18,5 @@ jobs:
         uses: veracode/veracode-sca@v2.1.10
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          create-issues: false
+          create-issues: true
           update_advisor: true
