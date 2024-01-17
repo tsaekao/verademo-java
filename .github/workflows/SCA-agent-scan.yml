@@ -14,6 +14,12 @@ jobs:
   veracode-sca-task:
     runs-on: ubuntu-latest
     name: SCA Agent-Based Scan
+    env:
+      SRCCLR_SCM_TYPE: GITHUB
+      SRCCLR_SCM_TOKEN: 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
+      SRCCLR_PR_ON: low
+      SRCCLR_NO_BREAKING_UPDATES: false
+      SRCCLR_IGNORE_CLOSED_PRS: true
 
     steps:
       - name: Checkout
