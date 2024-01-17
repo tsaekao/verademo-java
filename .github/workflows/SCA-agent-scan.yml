@@ -28,4 +28,3 @@ jobs:
           create-issues: true
           update_advisor: true
           debug: true
-          pull-request: true
