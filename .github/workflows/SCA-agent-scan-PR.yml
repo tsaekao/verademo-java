@@ -14,6 +14,8 @@ jobs:
   veracode-sca-task:
     runs-on: ubuntu-latest
     name: SCA Agent-Based Scan
+    env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
@@ -22,7 +24,7 @@ jobs:
       - name: SCA Agent Scan
         run: |
              export SRCCLR_SCM_TYPE=GITHUB
-             export SRCCLR_SCM_TOKEN=${{ secrets.GITHUB_TOKEN }}
+             
              export SRCCLR_SCM_URL=https://api.github.com
              export SRCCLR_PR_ON=low
              export SRCCLR_ENABLE_PR=true
