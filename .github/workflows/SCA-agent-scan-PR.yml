@@ -16,8 +16,7 @@ jobs:
     name: SCA Agent-Based Scan
     env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SRCCLR_SCM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          SRCCLR_SCM_TOKEN: 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
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -33,6 +32,5 @@ jobs:
              export SRCCLR_IGNORE_CLOSED_PRS=true
 
              export SRCCLR_API_TOKEN=${{ secrets.SRCCLR_API_TOKEN }}
-             curl -sSL https://download.sourceclear.com/ci.sh | bash -s - scan --update-advisor --allow-dirty
-             curl -sSL https://download.sourceclear.com/ci.sh | bash -s - scan --pull-request
+             curl -sSL https://download.sourceclear.com/ci.sh | bash -s - scan --update-advisor --allow-dirty --pull-request
 
