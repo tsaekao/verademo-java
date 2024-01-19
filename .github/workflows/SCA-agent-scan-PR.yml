@@ -22,7 +22,7 @@ jobs:
       - name: SCA Agent Scan
         run: |
              export SRCCLR_SCM_TYPE="GITHUB"
-             export SRCCLR_SCM_TOKEN="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"
+             export SRCCLR_SCM_TOKEN="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"
              export SRCCLR_SCM_URL="https://github.acme.io"
              export SRCCLR_PR_ON=low
              export SRCCLR_ENABLE_PR=true
