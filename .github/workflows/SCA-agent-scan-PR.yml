@@ -1,0 +1,46 @@
+name: SCA Agent-Based Scan PR
+on: 
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+  security-events: write
+  pull-requests: write
+
+jobs:
+  veracode-sca-task:
+    runs-on: ubuntu-latest
+    name: SCA Agent-Based Scan
+    env:
+      SRCCLR_SCM_TYPE: "GITHUB"
+      SRCCLR_SCM_TOKEN: "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"
+      SRCCLR_PR_ON: "low"
+      SRCCLR_NO_BREAKING_UPDATES: false
+      SRCCLR_IGNORE_CLOSED_PRS: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: SCA Agent Scan
+        run: |
+             export SRCCLR_SCM_TYPE="GITHUB"
+             export SRCCLR_SCM_TOKEN="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"
+             export SRCCLR_SCM_URL="https://github.acme.io"
+             export SRCCLR_PR_ON="low"
+             export SRCCLR_ENABLE_PR=true
+
+             export SRCCLR_API_TOKEN=${{ secrets.SRCCLR_API_TOKEN }}
+             curl -sSL https://download.sourceclear.com/ci.sh | bash -s - scan ---update-advisor --pull-request
+      
+        #env:
+        #  SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_API_TOKEN }}
+        #uses: veracode/veracode-sca@v2.1.10
+        #with:
+        #  github_token: ${{ secrets.GITHUB_TOKEN }}
+        #  create-issues: true
+        #  update_advisor: true
+        #  debug: true
