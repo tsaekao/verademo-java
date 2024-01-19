@@ -22,8 +22,8 @@ jobs:
       - name: SCA Agent Scan
         run: |
              export SRCCLR_SCM_TYPE="GITHUB"
-             export SRCCLR_SCM_TOKEN='${{ secrets.GITHUB_TOKEN }}'
-             export SRCCLR_SCM_URL="https://api.github.com"
+             export SRCCLR_SCM_TOKEN='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'
+             export SRCCLR_SCM_URL="https://gitlab.acme.io"
              export SRCCLR_PR_ON=low
              export SRCCLR_ENABLE_PR=true
              export SRCCLR_NO_BREAKING_UPDATES=false
