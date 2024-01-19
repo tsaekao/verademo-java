@@ -16,6 +16,7 @@ jobs:
     name: SCA Agent-Based Scan
     env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SRCCLR_SCM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
