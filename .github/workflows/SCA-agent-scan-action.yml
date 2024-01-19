@@ -1,4 +1,4 @@
-name: SCA Agent-Based Scan
+name: SCA Agent-Based Scan Action
 on: 
   workflow_dispatch:
   pull_request:
