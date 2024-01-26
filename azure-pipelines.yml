@@ -35,7 +35,7 @@ steps:
 
 - task: Veracode@3
   displayName: Upload and Scan
-  enabled: true
+  enabled: false
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -74,7 +74,7 @@ steps:
       export scaDownloadUrl=https://download.srcclr.com/ci.sh
       export SCM_REF_TYPE=branch
       # make sure the branch name is set appropriately for the below scm_ref 
-      export SCM_REF=main
+      export SCM_REF=master
       export SCM_REV=1.0
       # curl -sSL $scaDownloadUrl | env DEBUG=1 bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
       curl -sSL $scaDownloadUrl | env bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
