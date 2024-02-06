@@ -29,7 +29,7 @@ jobs:
         run: |
              export SRCCLR_SCM_TYPE="GITHUB"
              export SRCCLR_SCM_TOKEN="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"
-             export SRCCLR_SCM_URL="https://github.acme.io"
+             export SRCCLR_SCM_URL="https://github.com/tsaekao/verademo-java/tree/PR"
              export SRCCLR_PR_ON="low"
              export SRCCLR_ENABLE_PR=true
 
