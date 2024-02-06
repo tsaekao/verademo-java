@@ -21,7 +21,7 @@ jobs:
         run: |
              export SRCCLR_SCM_TYPE='GITHUB'
              
-             export SRCCLR_SCM_URL='https://gitlab.acme.io'
+             export SRCCLR_SCM_URL='https://github.com/tsaekao/verademo-java/tree/PR'
              export SRCCLR_PR_ON='low'
              export SRCCLR_ENABLE_PR=true
              export SRCCLR_NO_BREAKING_UPDATES=false
