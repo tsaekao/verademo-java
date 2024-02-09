@@ -14,6 +14,9 @@ jobs:
 
         - name: Container Scan
           run: ./veracode scan --source alpine:latest --type image -f table 
+          env:
+            VERACODE_API_KEY_ID: ${{ secrets.VERACODE_API_ID }}
+            VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_API_KEY }}
   
   static_analysis:
     name: Static Analysis
