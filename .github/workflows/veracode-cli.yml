@@ -2,6 +2,19 @@ name: Veracode CLI
 on: workflow_dispatch
     
 jobs:
+  download_cli:
+    name: Download Veracode CLI
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Download CLI
+          uses: wei/curl@master
+          with:
+            args: -fsS https://tools.veracode.com/veracode-cli/install | sh
+
+        - name: Container Scan
+          run: ./veracode scan --source alpine:latest --type image -f table 
+  
   static_analysis:
     name: Static Analysis
     runs-on: ubuntu-latest
@@ -13,16 +26,8 @@ jobs:
       - name: Build with Maven # Compiling the .war binary from the checked out repo source code to upload to the scanner in the next step
         run: mvn -B package --file pom.xml
 
-      - name: Download Veracode CLI
-        uses: wei/curl@master
-        with:
-          args: -fsS https://tools.veracode.com/veracode-cli/install | sh
-
       - name: Run a static scan
-        run: ./veracode static scan target/verademo.war
+        run: ./veracode static scan target/verademo.war --fail-on-severity "Very High"
         env:
           VERACODE_API_KEY_ID: ${{ secrets.VERACODE_API_ID }}
           VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_API_KEY }}
-
-      - name: Container Scan
-        run: ./veracode scan --source alpine:latest --type image -f table
