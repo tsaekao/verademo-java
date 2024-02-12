@@ -66,7 +66,7 @@ steps:
 
 - task: CmdLine@2
   displayName: SCA Agent-Based Scan
-  enabled: false
+  enabled: true
   inputs:
     script: |
       export SCM_URI='https://Verademo-ADO'
@@ -81,7 +81,7 @@ steps:
 
 - task: Bash@3
   displayName: Policy Scan API Wrapper
-  enabled: false
+  enabled: true
   inputs:
     targetType: "inline"
     script: |
@@ -91,7 +91,7 @@ steps:
 
 - task: Bash@3
   displayName: Veracode Pipeline Scan
-  enabled: true
+  enabled: false
   inputs:
     targetType: "inline"
     script: |
