@@ -9,6 +9,18 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+# schedules:
+#- cron: '0 0 * * *'
+#  displayName: Daily midnight build
+
+schedules:
+- cron: '0 0 1 JAN,APR,JUL,OCT *'
+  displayName: Every 3 Months
+  branches:
+    include:
+    - main
+  # This will run every 3 months on the first day of that month on midnight
+
 steps:
 - task: PublishTestResults@2
   inputs:
