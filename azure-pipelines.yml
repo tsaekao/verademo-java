@@ -14,7 +14,7 @@ pool:
 #  displayName: Daily midnight build
 
 schedules:
-- cron: '0 0 1 JAN,APR,JUL,OCT *'
+- cron: '0 0 7 JAN,MAR,JUN,AUG,OCT,DEC *'
   displayName: Every 3 Months
   branches:
     include:
