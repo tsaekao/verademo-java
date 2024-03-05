@@ -18,7 +18,7 @@ schedules:
   displayName: Every 2 Months
   branches:
     include:
-    - main
+    - default
   # This will run every 2 months on the seventh day of that month on midnight
 
 steps:
