@@ -22,7 +22,54 @@ jobs:
           vid: '${{ secrets.VERACODE_API_ID }}'
           vkey: '${{ secrets.VERACODE_API_KEY }}'
           createsandbox: 'false'
-          sandboxname: 'GitHub Actions'
+#          sandboxname: 'GitHub Actions'
 #          scantimeout: 0
 #          exclude: '*.js'
 #          criticality: 'VeryHigh'
+
+    get-policy-flaws:
+     name: Get Flaws
+     runs-on: ubuntu-latest
+     container: 
+       image: veracode/api-signing:latest
+     steps:
+       - name: get policy flaws
+         run: |
+           cd /tmp
+           export VERACODE_API_KEY_ID=${{ secrets.VERACODE_API_ID }}
+           export VERACODE_API_KEY_SECRET=${{ secrets.VERACODE_API_KEY }}
+           guid=$(http --auth-type veracode_hmac GET "https://api.veracode.com/appsec/v1/applications?name=VERACODE-PROFILE-NAME" | jq -r '._embedded.applications[0].guid') 
+           echo GUID: ${guid}
+           total_flaws=$(http --auth-type veracode_hmac GET "https://api.veracode.com/appsec/v2/applications/${guid}/findings?scan_type=STATIC&violates_policy=True" | jq -r '.page.total_elements')
+           echo TOTAL_FLAWS: ${total_flaws}
+           http --auth-type veracode_hmac GET "https://api.veracode.com/appsec/v2/applications/${guid}/findings?scan_type=STATIC&violates_policy=True&size=${total_flaws}" > policy_flaws.json
+
+       - name: save results file
+         uses: actions/upload-artifact@v3
+         with:
+           name: policy-flaws
+           path: /tmp/policy_flaws.json
+
+    results_to_sarif:
+       needs: static_analysis
+       runs-on: ubuntu-latest
+       name: import policy results to sarif
+       steps:
+         - name: Get scan results
+           uses: actions/download-artifact@v3
+           with:
+             name: "Veracode Policy-Scan Results"
+         - name: Convert policy scan output to SARIF format
+           id: convert
+           uses: Veracode/veracode-pipeline-scan-results-to-sarif@v1.0.7
+           with:
+             results-json: /tmp/policy_flaws.json
+             output-results-sarif: veracode-results.sarif
+             source-base-path-1: "^com/veracode:src/main/java/com/veracode"
+             source-base-path-2: "^WEB-INF:src/main/webapp/WEB-INF"
+             output-results-sarif: veracode-results.sarif
+             repo_owner: OWNER
+             repo_name: REPO
+             commitSHA: COMMIT-SHA
+             ref: refs/heads/master
+             githubToken: *****
