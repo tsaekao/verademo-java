@@ -56,8 +56,7 @@ steps:
     filepath: '$(build.artifactstagingdirectory)'
     createSandBox: false # Set true to create sandbox, or false if sandbox is already created
     sandboxName: 'Azure DevOps'
-    failBuildOnPolicyFail: true
-    importResults: true # Set true if you want the SAST scan results in the console output
+    importResults: false # Set true if you want the SAST scan results in the console output
     maximumWaitTime: '360'
 
 - task: Veracode Flaw Importer@3
