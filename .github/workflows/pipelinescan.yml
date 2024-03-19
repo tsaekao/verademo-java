@@ -62,13 +62,13 @@ jobs:
         source-base-path-1: "^com/veracode:src/main/java/com/veracode"
         source-base-path-2: "^WEB-INF:src/main/webapp/WEB-INF"
         finding-rule-level: "3:1:0"
-    - uses: github/codeql-action/upload-sarif@v2
+    - uses: github/codeql-action/upload-sarif@v3
       with:
         # Path to SARIF file relative to the root of the repository
         sarif_file: veracode-results.sarif
 
     - name: save filtered results file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: filtered-results
         path: filtered_results.json
