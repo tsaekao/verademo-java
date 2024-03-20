@@ -47,7 +47,7 @@ steps:
 
 - task: Veracode@3
   displayName: Upload and Scan
-  enabled: false
+  enabled: true
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -56,7 +56,7 @@ steps:
     filepath: '$(build.artifactstagingdirectory)'
     createSandBox: false # Set true to create sandbox, or false if sandbox is already created
     sandboxName: 'Azure DevOps'
-    importResults: false # Set true if you want the SAST scan results in the console output
+    importResults: true # Set true if you want the SAST scan results in the console output
     maximumWaitTime: '360'
 
 - task: Veracode Flaw Importer@3
@@ -78,7 +78,7 @@ steps:
 
 - task: CmdLine@2
   displayName: SCA Agent-Based Scan
-  enabled: true
+  enabled: false
   inputs:
     script: |
       export SCM_URI='https://Verademo-ADO'
@@ -103,7 +103,7 @@ steps:
 
 - task: Bash@3
   displayName: Veracode Pipeline Scan
-  enabled: true
+  enabled: false
   inputs:
     targetType: "inline"
     script: |
