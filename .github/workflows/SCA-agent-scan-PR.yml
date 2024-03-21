@@ -20,7 +20,7 @@ jobs:
       - name: SCA Agent Scan
         run: |
              export SRCCLR_SCM_TYPE='GITHUB'
-             export SRCCLR_SCM_TOKEN: "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"
+             export SRCCLR_SCM_TOKEN="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"
 
              export SRCCLR_PR_ON='low'
              export SRCCLR_ENABLE_PR=true
