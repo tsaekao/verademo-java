@@ -12,7 +12,7 @@ jobs:
     env:
           # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SRCCLR_SCM_TYPE: 'GITHUB'
-          SRCCLR_SCM_TOKEN: "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"
+          SRCCLR_SCM_TOKEN: "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"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -20,7 +20,7 @@ jobs:
       - name: SCA Agent Scan
         run: |
              export SRCCLR_SCM_TYPE='GITHUB'
-             export SRCCLR_SCM_TOKEN="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"
+             export SRCCLR_SCM_TOKEN="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"
 
              export SRCCLR_PR_ON='low'
              export SRCCLR_ENABLE_PR=true
