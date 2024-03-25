@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: SCA Agent-Based Scan
     env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SRCCLR_SCM_TYPE: 'GITHUB'
           SRCCLR_SCM_TOKEN: "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"
     steps:
