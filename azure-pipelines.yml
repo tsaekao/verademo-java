@@ -65,10 +65,10 @@ steps:
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
-    veracodeAppProfile: 'Business-Unit-Test'
+    veracodeAppProfile: 'Team-Test'
     version: '$(build.buildNumber)'
     filepath: '$(build.artifactstagingdirectory)'
-    optargs: '-businessunit DevBusinessUnit'
+    optargs: '-businessunit DevBusinessUnit -teams TEAM-Verademo'
     createProfile: true
     maximumWaitTime: '360'
 
