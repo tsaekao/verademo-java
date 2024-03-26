@@ -9,6 +9,9 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- group: VeracodeAPI
+
 # schedules:
 #- cron: '0 0 * * *'
 #  displayName: Daily midnight build
@@ -60,8 +63,8 @@ steps:
     maximumWaitTime: '360'
 
 - task: Veracode@3
-  displayName: Upload and Scan
-  enabled: true
+  displayName: Create Profile & Upload and Scan
+  enabled: false
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -138,3 +141,11 @@ steps:
       bash start_veracode.sh $VERACODE_WEBHOOK $VERACODE_API_ID $VERACODE_API_KEY
        env:
        VERACODE_WEBHOOK: $(veracodeWebhook)
+
+- task: VeracodePipelineScan@0
+  displayName: Pipeline Scan
+  enabled: true
+  inputs:
+    VeracodeAPIID: '$(vid)'
+    VeracodeAPIsecret: '$(vkey)'
+    fileToScan: '$(System.DefaultWorkingDirectory)/verademo.war'
