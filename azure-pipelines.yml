@@ -148,4 +148,4 @@ steps:
   inputs:
     VeracodeAPIID: '$(vid)'
     VeracodeAPIsecret: '$(vkey)'
-    fileToScan: '$(build.artifactstagingdirectory)/target/*.war'
+    fileToScan: 'target/verademo.war'
