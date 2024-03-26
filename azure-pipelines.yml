@@ -68,7 +68,7 @@ steps:
     veracodeAppProfile: 'Team-Test-2'
     version: '$(build.buildNumber)'
     filepath: '$(build.artifactstagingdirectory)'
-    optargs: '-businessunit DevBusinessUnit2 -teams Test 1'
+    optargs: '-businessunit DevBusinessUnit -teams Test 1'
     createProfile: true
     maximumWaitTime: '360'
 
