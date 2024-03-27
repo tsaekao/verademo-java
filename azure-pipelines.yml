@@ -44,7 +44,7 @@ steps:
 
 - task: Veracode@3
   displayName: Upload and Scan
-  enabled: false
+  enabled: true
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -53,7 +53,7 @@ steps:
     filepath: '$(build.artifactstagingdirectory)'
     createSandBox: false # Set true to create sandbox, or false if sandbox is already created
     sandboxName: 'Azure DevOps'
-    importResults: true # Set true if you want the SAST scan results in the console output
+    importResults: false # Set true if you want the SAST scan results in the console output
     maximumWaitTime: '360'
 
 - task: Veracode@3
@@ -71,7 +71,7 @@ steps:
 
 - task: Veracode Flaw Importer@3
   displayName: Veracode Flaw Importer
-  enabled: false
+  enabled: true
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
