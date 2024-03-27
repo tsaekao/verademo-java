@@ -42,6 +42,14 @@ steps:
     Contents: '**/?(*.ear|*.war|*.jar)'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
+- task: VeracodePipelineScan@0
+  displayName: Pipeline Scan
+  enabled: true
+  inputs:
+    VeracodeAPIID: '$(vid)'
+    VeracodeAPIsecret: '$(vkey)'
+    fileToScan: 'target/verademo.war'
+
 - task: Veracode@3
   displayName: Upload and Scan
   enabled: true
@@ -52,21 +60,8 @@ steps:
     version: 'Verademo-$(build.buildNumber)'
     filepath: '$(build.artifactstagingdirectory)'
     createSandBox: false # Set true to create sandbox, or false if sandbox is already created
-    sandboxName: 'Azure DevOps'
+    # sandboxName: 'Azure DevOps'
     importResults: false # Set true if you want the SAST scan results in the console output
-    maximumWaitTime: '360'
-
-- task: Veracode@3
-  displayName: Create Profile & Upload and Scan
-  enabled: false
-  inputs:
-    ConnectionDetailsSelection: 'Service Connection'
-    AnalysisService: 'verademo'
-    veracodeAppProfile: 'Team-Test-2'
-    version: '$(build.buildNumber)'
-    filepath: '$(build.artifactstagingdirectory)'
-    optargs: '-businessunit DevBusinessUnit -teams Test 1'
-    createProfile: true
     maximumWaitTime: '360'
 
 - task: Veracode Flaw Importer@3
@@ -86,6 +81,19 @@ steps:
     iterationPath: '$(system.teamProject)'
     flawImportLimit: '1000'
 
+- task: Veracode@3
+  displayName: Create Profile & Upload and Scan
+  enabled: false
+  inputs:
+    ConnectionDetailsSelection: 'Service Connection'
+    AnalysisService: 'verademo'
+    veracodeAppProfile: 'Team-Test-2'
+    version: '$(build.buildNumber)'
+    filepath: '$(build.artifactstagingdirectory)'
+    optargs: '-businessunit DevBusinessUnit -teams Test 1'
+    createProfile: true
+    maximumWaitTime: '360'
+
 - task: CmdLine@2
   displayName: SCA Agent-Based Scan
   enabled: false
@@ -102,7 +110,7 @@ steps:
       curl -sSL $scaDownloadUrl | env bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
 
 - task: Bash@3
-  displayName: Policy Scan API Wrapper
+  displayName: Policy Scan via API Wrapper Bash Script
   enabled: false
   inputs:
     targetType: "inline"
@@ -112,7 +120,7 @@ steps:
       java -jar VeracodeJavaAPI.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -action uploadandscan -appname 'Verademo-Java' -createprofile false -filepath '$(build.artifactstagingdirectory)' -version 'Verademo-Policy-$(build.buildNumber)'
 
 - task: Bash@3
-  displayName: Veracode Pipeline Scan
+  displayName: Veracode Pipeline Scan via Bash Script
   enabled: false
   inputs:
     targetType: "inline"
@@ -136,10 +144,3 @@ steps:
        env:
        VERACODE_WEBHOOK: $(veracodeWebhook)
 
-- task: VeracodePipelineScan@0
-  displayName: Pipeline Scan
-  enabled: true
-  inputs:
-    VeracodeAPIID: '$(vid)'
-    VeracodeAPIsecret: '$(vkey)'
-    fileToScan: 'target/verademo.war'
