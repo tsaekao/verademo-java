@@ -111,10 +111,11 @@ steps:
       # curl -sSL $scaDownloadUrl | env DEBUG=1 bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
       curl -sSL $scaDownloadUrl | env bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
 
-- task: CmdLine@2
+- task: Bash@3
   displayName: Veracode CLI
   enabled: true
   inputs:
+    targetType: "inline"
     script: |
       export VERACODE_API_KEY_ID = $(VERACODE_API_ID)
       export VERACODE_API_KEY_SECRET = $(VERACODE_API_KEY)
