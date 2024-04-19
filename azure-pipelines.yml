@@ -119,8 +119,8 @@ steps:
       export VERACODE_API_KEY_ID = $(VERACODE_API_ID)
       export VERACODE_API_KEY_SECRET = $(VERACODE_API_KEY)
       curl -fsS https://tools.veracode.com/veracode-cli/install | sh
-      ./veracode package -s . -o target
-      ./veracode static scan target/verademo.war
+      ./veracode package -s '$(Build.SourcesDirectory)' -o '$(build.artifactstagingdirectory)'
+      ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war
 
 - task: Bash@3
   displayName: Policy Scan via API Wrapper Bash Script
