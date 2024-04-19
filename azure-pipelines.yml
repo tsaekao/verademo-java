@@ -117,9 +117,10 @@ steps:
   inputs:
     targetType: "inline"
     script: |
-      export VERACODE_API_KEY_ID = $(VERACODE_API_ID)
-      export VERACODE_API_KEY_SECRET = $(VERACODE_API_KEY)
-      curl -sSO https://tools.veracode.com/veracode-cli/install | sh
+      export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
+      export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
+      curl -fsS https://tools.veracode.com/veracode-cli/install | sh
+      ./veracode configure
       ./veracode package -s '$(Build.SourcesDirectory)' -o '$(build.artifactstagingdirectory)'
       ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war
 
