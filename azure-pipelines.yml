@@ -25,6 +25,7 @@ steps:
     RunAsPreJob: true
 
 - task: Maven@3
+  enabled: false
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -36,6 +37,7 @@ steps:
     goals: 'package'
 
 - task: CopyFiles@2
+  enabled: false
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)'
@@ -44,7 +46,7 @@ steps:
 
 - task: VeracodePipelineScan@0
   displayName: Pipeline Scan
-  enabled: true
+  enabled: false
   inputs:
     VeracodeAPIID: '$(vid)'
     VeracodeAPIsecret: '$(vkey)'
@@ -52,7 +54,7 @@ steps:
 
 - task: Veracode@3
   displayName: Upload and Scan
-  enabled: true
+  enabled: false
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -66,7 +68,7 @@ steps:
 
 - task: Veracode Flaw Importer@3
   displayName: Veracode Flaw Importer
-  enabled: true
+  enabled: false
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -108,6 +110,15 @@ steps:
       export SCM_REV=1.0
       # curl -sSL $scaDownloadUrl | env DEBUG=1 bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
       curl -sSL $scaDownloadUrl | env bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
+
+- task: CmdLine@2
+  displayName: Veracode CLI
+  enabled: true
+  inputs:
+    script: |
+      curl -fsS https://tools.veracode.com/veracode-cli/install | sh
+      ./veracode package -s . -o target
+      ./veracode static scan target/verademo.war
 
 - task: Bash@3
   displayName: Policy Scan via API Wrapper Bash Script
