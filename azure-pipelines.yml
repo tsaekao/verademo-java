@@ -18,6 +18,7 @@ pool:
 
 steps:
 - task: AzureKeyVault@2
+  enabled: false
   inputs:
     azureSubscription: 'Veracode-Key-Vault-verademo'
     KeyVaultName: 'veracode-keyvault'
