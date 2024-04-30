@@ -98,7 +98,7 @@ steps:
 
 - task: CmdLine@2
   displayName: SCA Agent-Based Scan
-  enabled: false
+  enabled: true
   inputs:
     script: |
       export SCM_URI='https://Verademo-ADO'
@@ -121,7 +121,7 @@ steps:
       export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
       export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
       curl -fsS https://tools.veracode.com/veracode-cli/install | sh
-      ./veracode package -s '$(Build.SourcesDirectory)' -o '$(build.artifactstagingdirectory)'
+      ./veracode package -s '$(Build.SourcesDirectory)' -o '$(build.artifactstagingdirectory)' -a true
       ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war
 
 - task: Bash@3
