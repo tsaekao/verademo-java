@@ -12,8 +12,8 @@ jobs:
           with:
             args: -fsS https://tools.veracode.com/veracode-cli/install | sh
 
-        - name: Container Scan
-          run: ./veracode scan --source alpine:latest --type image -f table 
+        - name: Package Application
+          run: ./veracode -s . -o veracode-artifact -a trust
           env:
             VERACODE_API_KEY_ID: ${{ secrets.VERACODE_API_ID }}
             VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_API_KEY }}
@@ -35,7 +35,7 @@ jobs:
           args: -fsS https://tools.veracode.com/veracode-cli/install | sh
 
       - name: Run a static scan
-        run: ./veracode static scan target/verademo.war --fail-on-severity "Very High"
+        run: ./veracode static scan veracode-artifact/verademo.war --fail-on-severity "Very High"
         env:
           VERACODE_API_KEY_ID: ${{ secrets.VERACODE_API_ID }}
           VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_API_KEY }}
