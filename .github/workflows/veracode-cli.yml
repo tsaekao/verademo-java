@@ -24,3 +24,12 @@ jobs:
       - name: Run a static scan
         run: ./veracode static scan veracode-artifact/verademo.war --fail-on-severity "Very High"
 
+      - name: Veracode Upload And Scan
+        uses: veracode/veracode-uploadandscan-action@0.2.6
+        with:
+          appname: 'Verademo-Java'
+          createprofile: false
+          filepath: 'veracode-artifact'
+          vid: '${{ secrets.VERACODE_API_ID }}'
+          vkey: '${{ secrets.VERACODE_API_KEY }}'
+          createsandbox: 'false'
