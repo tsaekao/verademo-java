@@ -1,4 +1,4 @@
-name: Auto-Package-and-Scan
+name: Veracode CLI
 on: workflow_dispatch
     
 jobs:  
