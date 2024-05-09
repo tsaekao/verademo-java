@@ -22,7 +22,7 @@ jobs:
         run: ./veracode package -s . -o veracode-artifact -a trust
 
       - name: Run a static scan
-        run: ./veracode static scan veracode-artifact/verademo.war --fail-on-severity "Very High"
+        run: ./veracode static scan veracode-artifact/verademo.war --fail-on-severity "Medium"
 
       - name: Veracode Upload And Scan
         uses: veracode/veracode-uploadandscan-action@0.2.6
