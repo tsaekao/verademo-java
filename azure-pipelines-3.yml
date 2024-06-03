@@ -1,45 +1,34 @@
-#########################################################################
-# Creation of JSON to configure scan
-#########################################################################
+# Demo pipeline to conduct a Veracode Dynamic Analysis Scan (create or update)
 
 trigger:
-- main
+#- master
+- none
 
 pool:
   vmImage: ubuntu-latest
+strategy:
+  matrix:
+    DAST_SCAN:
+      python.version: '3.7'
 
 steps:
-- task: PowerShell@2
-  displayName: Veracode DAST Configuration JSON
+- task: UsePythonVersion@0
   inputs:
-    targetType: 'inline'
-    script: |
-      $str = '{"name": "Verademo", "schedule": { "duration": { "length": 1, "unit": "DAY" }, "scheduled": true, "now": true } } ' 
-      Write-Output $str | Out-file -FilePath ./input.json
-      ls
-      Get-Content input.json
+    versionSpec: '$(python.version)'
+  displayName: 'Setup Veracode Dynamic Analysis Scan'
 
-#########################################################################
-# Downloading and installing HTTPIE for HMAC REST Requests
-#########################################################################
-# HTTPIE documentation: https://httpie.io/docs/cli/universal
-# Veracode Documentation: https://docs.veracode.com/r/c_httpie_tool
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
 
-- task: PowerShell@2
-  displayName: Veracode REST API Calls
-  continueOnError: true
-  env:
-    VERACODE_API_KEY_SECRET: $(VERACODE_API_KEY)
-    VERACODE_API_KEY_ID: $(VERACODE_API_ID)
-  inputs:
-    targetType: 'inline'
-    script: |
-      python --version
-      python -m pip install --upgrade pip wheel
-      python -m pip install httpie
-      git clone https://github.com/veracode/veracode-python-hmac-example.git
-      cd veracode-python-hmac-example
-      pip install -r requirements.txt
-      cd ..
-      Write-Output "Creating new Dynamic configuration"
-      Get-Content ./input.json |  http --auth-type=veracode_hmac PUT "https://api.veracode.com/was/configservice/v1/analyses/verademo.tsaekao.vuln.sa.veracode.io/verademo?method=PATCH"
+- script: |
+    export Dynamic_Target=$(DYNAMIC_TARGET)
+    export JOB_NAME='$(system.teamProject)_ADO_yaml_$(Build.BuildNumber)'
+    export VeraID=$(VERACODE_API_ID)
+    export VeraPW=$(VERACODE_API_SECRET)
+    export Dynamic_User=$(DYNAMIC_USER)
+    export Dynamic_Pass=$(DYNAMIC_PASS)
+    export PIPELINE_ID=$(Build.BuildNumber)
+    python create-or-update-da-scan.py
+  displayName: 'Create or update and run the Dynamic Analysis'
