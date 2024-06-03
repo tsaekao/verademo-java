@@ -24,7 +24,7 @@ steps:
 
 - script: |
     export Dynamic_Target=$(DYNAMIC_TARGET)
-    export JOB_NAME='$(system.teamProject)_ADO_yaml_$(Build.BuildNumber)'
+    export JOB_NAME='Verademo'
     export VeraID=$(VERACODE_API_ID)
     export VeraPW=$(VERACODE_API_SECRET)
     export Dynamic_User=$(DYNAMIC_USER)
