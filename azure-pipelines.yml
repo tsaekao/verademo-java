@@ -116,16 +116,25 @@ steps:
       curl -sSL $scaDownloadUrl | env bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
 
 - task: Bash@3
-  displayName: Veracode CLI
+  displayName: Auto-Package
   enabled: true
   inputs:
     targetType: "inline"
     script: |
-      pwd
       export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
       export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
       curl -fsS https://tools.veracode.com/veracode-cli/install | sh
       ./veracode package -s '$(Build.SourcesDirectory)' -o '$(build.artifactstagingdirectory)' -a true
+      ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war
+
+- task: Bash@3
+  displayName: CLI Scan
+  enabled: true
+  inputs:
+    targetType: "inline"
+    script: |
+      export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
+      export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
       ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war
 
 - task: Bash@3
