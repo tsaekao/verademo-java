@@ -12,9 +12,12 @@ pool:
 # variables:
 # - group: VeracodeAPI
 
-# schedules:
-#- cron: '0 0 * * *'
-#  displayName: Daily midnight build
+schedules:
+- cron: '3 18 * * *'
+  displayName: Daily midnight build
+  branches:
+    include:
+    - main
 
 steps:
 - task: AzureKeyVault@2
