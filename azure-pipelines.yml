@@ -48,17 +48,38 @@ steps:
     Contents: '**/?(*.ear|*.war|*.jar)'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
+- task: Bash@3
+  displayName: Auto-Package
+  enabled: true
+  inputs:
+    targetType: "inline"
+    script: |
+      export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
+      export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
+      curl -fsS https://tools.veracode.com/veracode-cli/install | sh
+      ./veracode package -s '$(Build.SourcesDirectory)' -o '$(build.artifactstagingdirectory)' -a true
+
+- task: Bash@3
+  displayName: CLI Scan
+  enabled: true
+  inputs:
+    targetType: "inline"
+    script: |
+      export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
+      export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
+      ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war
+
 - task: VeracodePipelineScan@0
   displayName: Pipeline Scan
   enabled: true
   inputs:
     VeracodeAPIID: '$(VERACODE_API_ID)'
     VeracodeAPIsecret: '$(VERACODE_API_KEY)'
-    fileToScan: 'target/verademo.war'
+    fileToScan: '$(Build.ArtifactStagingDirectory)/verademo.war'
 
 - task: Veracode@3
   displayName: Upload and Scan
-  enabled: false
+  enabled: true
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -67,12 +88,12 @@ steps:
     filepath: '$(build.artifactstagingdirectory)'
     createSandBox: false # Set true to create sandbox, or false if sandbox is already created
     # sandboxName: 'Azure DevOps'
-    importResults: true # Set true if you want the SAST scan results in the console output
+    importResults: false # Set true if you want the SAST scan results in the console output
     maximumWaitTime: '360'
 
 - task: Veracode Flaw Importer@3
   displayName: Veracode Flaw Importer
-  enabled: false
+  enabled: true
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -114,28 +135,6 @@ steps:
       export SCM_REV=1.0
       # curl -sSL $scaDownloadUrl | env DEBUG=1 bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
       curl -sSL $scaDownloadUrl | env bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
-
-- task: Bash@3
-  displayName: Auto-Package
-  enabled: true
-  inputs:
-    targetType: "inline"
-    script: |
-      export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
-      export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
-      curl -fsS https://tools.veracode.com/veracode-cli/install | sh
-      ./veracode package -s '$(Build.SourcesDirectory)' -o '$(build.artifactstagingdirectory)' -a true
-      ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war
-
-- task: Bash@3
-  displayName: CLI Scan
-  enabled: true
-  inputs:
-    targetType: "inline"
-    script: |
-      export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
-      export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
-      ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war
 
 - task: Bash@3
   displayName: Policy Scan via API Wrapper Bash Script
