@@ -52,8 +52,8 @@ steps:
   displayName: Pipeline Scan
   enabled: true
   inputs:
-    VeracodeAPIID: '$(vid)'
-    VeracodeAPIsecret: '$(vkey)'
+    VeracodeAPIID: '$(VERACODE_API_ID)'
+    VeracodeAPIsecret: '$(VERACODE_API_KEY)'
     fileToScan: 'target/verademo.war'
 
 - task: Veracode@3
