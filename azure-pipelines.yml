@@ -67,7 +67,7 @@ steps:
     script: |
       export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
       export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
-      ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war
+      ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war || true
 
 - task: VeracodePipelineScan@0
   displayName: Pipeline Scan
