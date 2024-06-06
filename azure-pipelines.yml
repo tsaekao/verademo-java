@@ -47,7 +47,7 @@ steps:
 
 - task: VeracodePipelineScan@0
   displayName: Pipeline Scan
-  enabled: false
+  enabled: true
   inputs:
     VeracodeAPIID: '$(vid)'
     VeracodeAPIsecret: '$(vkey)'
