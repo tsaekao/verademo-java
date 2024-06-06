@@ -13,7 +13,7 @@ pool:
 # - group: VeracodeAPI
 
 schedules:
-- cron: '4 18 * * *'
+- cron: '5 22 * * *'
   displayName: Daily midnight build
   branches:
     include:
