@@ -9,17 +9,17 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-# variables:
-# - group: VeracodeAPI
-
+# Schedule build. Time is in UTC. Format is mm HH DD MM DW
 schedules:
-- cron: '48 15 * * *'
+- cron: '00 16 * * *' # 16:00 UTC = 12:00pm ET
   displayName: Daily build
   branches:
     include:
     - master
 
 steps:
+
+# This step allows me to pull my API Credentials from my Azure Key Vault.
 - task: AzureKeyVault@2
   enabled: false
   inputs:
@@ -28,6 +28,8 @@ steps:
     SecretsFilter: '*'
     RunAsPreJob: true
 
+# This step MANUALLY builds my Java application using Maven.
+# NOT NEEDED if using Veracode CLI to auto-package
 - task: Maven@3
   enabled: false
   inputs:
@@ -40,6 +42,8 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
 
+# This step takes my packaged application from the previous step and places it in a target folder
+# NOT NEEDED if using Veracode CLI to auto-package
 - task: CopyFiles@2
   enabled: false
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
@@ -48,17 +52,17 @@ steps:
     Contents: '**/?(*.ear|*.war|*.jar)'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
+# This step uses the Veracode CLI to auto-package my application
 - task: Bash@3
   displayName: Auto-Package
   enabled: true
   inputs:
     targetType: "inline"
     script: |
-      export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
-      export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
       curl -fsS https://tools.veracode.com/veracode-cli/install | sh
       ./veracode package -s '$(Build.SourcesDirectory)' -o '$(build.artifactstagingdirectory)' -a true
 
+# This step will run a local static scan (pipeline scan) using the Veracode CLI
 - task: Bash@3
   displayName: CLI Scan
   enabled: true
@@ -69,6 +73,7 @@ steps:
       export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
       ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war || true
 
+# This stepp will run a local static scan (pipeline scan) using the Veracode ADO Pipeline Scan Extension
 - task: VeracodePipelineScan@0
   displayName: Pipeline Scan
   enabled: true
@@ -77,6 +82,7 @@ steps:
     VeracodeAPIsecret: '$(VERACODE_API_KEY)'
     fileToScan: '$(Build.ArtifactStagingDirectory)/verademo.war'
 
+# This step will run a Veracode static scan and upload the results to the Veracode platform using the Veracode upload & scan task.
 - task: Veracode@3
   displayName: Upload and Scan
   enabled: true
@@ -91,6 +97,7 @@ steps:
     importResults: false # Set true if you want the SAST scan results in the console output
     maximumWaitTime: '360'
 
+# This step will import my flaws that violate policy as ADO work items
 - task: Veracode Flaw Importer@3
   displayName: Veracode Flaw Importer
   enabled: true
@@ -108,19 +115,7 @@ steps:
     iterationPath: '$(system.teamProject)'
     flawImportLimit: '1000'
 
-- task: Veracode@3
-  displayName: Create Profile & Upload and Scan
-  enabled: false
-  inputs:
-    ConnectionDetailsSelection: 'Service Connection'
-    AnalysisService: 'verademo'
-    veracodeAppProfile: 'Team-Test-2'
-    version: '$(build.buildNumber)'
-    filepath: '$(build.artifactstagingdirectory)'
-    optargs: '-businessunit DevBusinessUnit -teams Test 1'
-    createProfile: true
-    maximumWaitTime: '360'
-
+# This step will run an SCA Agent-Based Scan
 - task: CmdLine@2
   displayName: SCA Agent-Based Scan
   enabled: true
@@ -136,6 +131,23 @@ steps:
       # curl -sSL $scaDownloadUrl | env DEBUG=1 bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
       curl -sSL $scaDownloadUrl | env bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
 
+
+##### FOLLOWING TASKS ARE OPTIONAL/EXTRA #####
+# This step will CREATE a Veracode application profile and add it to a business unit and team, and run a static scan
+- task: Veracode@3
+  displayName: Create Profile & Upload and Scan
+  enabled: false
+  inputs:
+    ConnectionDetailsSelection: 'Service Connection'
+    AnalysisService: 'verademo'
+    veracodeAppProfile: '$(Build.Repository.Name)'
+    version: '$(build.buildNumber)'
+    filepath: '$(build.artifactstagingdirectory)'
+    optargs: '-businessunit DevBusinessUnit -teams Test 1'
+    createProfile: true
+    maximumWaitTime: '360'
+
+# This step will run a policy scan using our Java API Wrapper in case the ADO Veracode upload & scan extension doesn't work
 - task: Bash@3
   displayName: Policy Scan via API Wrapper Bash Script
   enabled: false
@@ -146,6 +158,8 @@ steps:
       unzip -o vosp-api-wrappers-java-23.8.12.0-dist.zip
       java -jar VeracodeJavaAPI.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -action uploadandscan -appname 'Verademo-Java' -createprofile false -filepath '$(build.artifactstagingdirectory)' -version 'Verademo-Policy-$(build.buildNumber)'
 
+# This step will run a local pipeline scan using our pipleine-scan.jar in case the ADO Veracode pipeline scan extension doesn't work
+# NOT NEEDED if using Veracode CLI to run the pipeline scan
 - task: Bash@3
   displayName: Veracode Pipeline Scan via Bash Script
   enabled: false
@@ -161,6 +175,7 @@ steps:
 # - publish: $(System.DefaultWorkingDirectory)/results.json # Save the scan results as a file named results.json.
 #  artifact: VeracodeBaseline
 
+# This will kick off a DAST Essentials Scan
 - task: Bash@3
   displayName: DAST Essentials
   enabled: false
