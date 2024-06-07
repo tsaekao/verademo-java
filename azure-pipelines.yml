@@ -1,7 +1,4 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+# This .yml file is a series of integration steps to integrate various Veracode tools within the Azure DevOps pipeline
 
 trigger:
 - manual
@@ -129,7 +126,6 @@ steps:
       # make sure the branch name is set appropriately for the below scm_ref 
       export SCM_REF=master
       export SCM_REV=1.0
-      # curl -sSL $scaDownloadUrl | env DEBUG=1 bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
       curl -sSL $scaDownloadUrl | env bash -s scan --scm-uri $SCM_URI --scm-rev $SCM_REV --scm-ref $SCM_REF --scm-ref-type $SCM_REF_TYPE --update-advisor
 
 
