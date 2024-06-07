@@ -60,6 +60,7 @@ steps:
       ./veracode package -s '$(Build.SourcesDirectory)' -o '$(build.artifactstagingdirectory)' -a true
 
 # This step will run a local static scan (pipeline scan) using the Veracode CLI
+# Add || false to the end of the static scan command to fail the build based on findings
 - task: Bash@3
   displayName: CLI Scan
   enabled: true
@@ -113,7 +114,7 @@ steps:
     iterationPath: '$(system.teamProject)'
     flawImportLimit: '1000'
 
-# This step will run an SCA Agent-Based Scan
+# This step will run an SCA Agent-Based Scan for 3rd party library vulnerabilities. 
 - task: CmdLine@2
   displayName: SCA Agent-Based Scan
   enabled: true
