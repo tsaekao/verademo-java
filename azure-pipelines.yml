@@ -73,7 +73,8 @@ steps:
       export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
       ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war || true
 
-# This stepp will run a local static scan (pipeline scan) using the Veracode ADO Pipeline Scan Extension
+# This stepp will run a local static scan (pipeline scan) using the Veracode ADO Pipeline Scan Extension. 
+# This is NOT an official Veracode extension, but was created by someone within Veracode.
 - task: VeracodePipelineScan@0
   displayName: Pipeline Scan
   enabled: true
