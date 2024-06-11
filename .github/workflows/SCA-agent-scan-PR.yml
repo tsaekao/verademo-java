@@ -24,7 +24,7 @@ jobs:
 
              export SRCCLR_PR_ON='low'
              export SRCCLR_ENABLE_PR=true
-             export SRCCLR_NO_BREAKING_UPDATES=false
+             export SRCCLR_NO_BREAKING_UPDATES=true
              export SRCCLR_IGNORE_CLOSED_PRS=true
              git config --global user.email "thomas.saekao@gmail.com"
              git config --global user.name "Thomas Saekao"
