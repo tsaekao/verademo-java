@@ -1,7 +1,6 @@
 name: SCA Agent-Based Scan PR
 on: 
   workflow_dispatch:
-  pull_request:
 
 permissions: write-all
 
