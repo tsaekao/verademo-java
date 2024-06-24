@@ -2,16 +2,10 @@ name: SCA Agent-Based Scan PR
 on: 
   workflow_dispatch:
 
-permissions: write-all
-
 jobs:
   veracode-sca-task:
     runs-on: ubuntu-latest
     name: SCA Agent-Based Scan
-    env:
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SRCCLR_SCM_TYPE: 'GITHUB'
-          SRCCLR_SCM_TOKEN: ${{ secrets.SRCCLR_SCM_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
