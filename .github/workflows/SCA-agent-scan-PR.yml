@@ -13,6 +13,8 @@ jobs:
       - name: SCA Agent Scan
         run: |
              export SRCCLR_SCM_TYPE='GITHUB'
+
+             # This is the Personal Access Token generated on GitHub that's needed to perform pull request. This permission scope given is "repo"
              export SRCCLR_SCM_TOKEN=${{ secrets.SRCCLR_SCM_TOKEN }}
              export SRCCLR_PR_ON='low'
              export SRCCLR_ENABLE_PR=true
@@ -20,6 +22,7 @@ jobs:
              export SRCCLR_IGNORE_CLOSED_PRS=true
              git config --global user.email "thomas.saekao@gmail.com"
              git config --global user.name "Thomas Saekao"
-             
+
+             # This is the token generated from the SCA Agent-Based Scan workspace on the platform
              export SRCCLR_API_TOKEN=${{ secrets.SRCCLR_API_TOKEN }}
              curl -sSL https://download.sourceclear.com/ci.sh | bash -s - scan --update-advisor --allow-dirty --recursive --pull-request
