@@ -26,6 +26,3 @@ jobs:
           update_advisor: true
           debug: true
           pull_request: true
-          run: |
-            git config --global user.email "thomas.saekao@gmail.com"
-            git config --global user.name "Thomas Saekao"
