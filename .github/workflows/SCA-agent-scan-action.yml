@@ -1,14 +1,6 @@
 name: SCA Agent-Based Scan Action
 on: 
   workflow_dispatch:
-  pull_request:
-
-permissions:
-  contents: read
-  issues: write
-  actions: write
-  security-events: write
-  pull-requests: write
 
 jobs:
   veracode-sca-task:
@@ -16,9 +8,9 @@ jobs:
     name: SCA Agent-Based Scan
     env:
       SRCCLR_SCM_TYPE: "GITHUB"
-      SRCCLR_SCM_TOKEN: "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"
+      SRCCLR_SCM_TOKEN: ${{ secrets.SRCCLR_SCM_TOKEN }}
       SRCCLR_PR_ON: "low"
-      SRCCLR_NO_BREAKING_UPDATES: false
+      SRCCLR_NO_BREAKING_UPDATES: true
       SRCCLR_IGNORE_CLOSED_PRS: true
 
     steps:
@@ -30,7 +22,9 @@ jobs:
           SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_API_TOKEN }}
         uses: veracode/veracode-sca@v2.1.10
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          create-issues: true
+          create-issues: false
           update_advisor: true
           debug: true
+          run: |
+            git config --global user.email "thomas.saekao@gmail.com"
+            git config --global user.name "Thomas Saekao"
