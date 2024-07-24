@@ -63,7 +63,7 @@ steps:
 # Add || false to the end of the static scan command to fail the build based on findings
 - task: Bash@3
   displayName: CLI Scan
-  enabled: true
+  enabled: false
   inputs:
     targetType: "inline"
     script: |
@@ -75,7 +75,7 @@ steps:
 # This is NOT an official Veracode extension, but was created by someone within Veracode.
 - task: VeracodePipelineScan@0
   displayName: Pipeline Scan
-  enabled: true
+  enabled: false
   inputs:
     VeracodeAPIID: '$(VERACODE_API_ID)'
     VeracodeAPIsecret: '$(VERACODE_API_KEY)'
@@ -84,7 +84,7 @@ steps:
 # This step will run a Veracode static scan and upload the results to the Veracode platform using the Veracode upload & scan task.
 - task: Veracode@3
   displayName: Upload and Scan
-  enabled: true
+  enabled: false
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -99,7 +99,7 @@ steps:
 # This step will import my flaws that violate policy as ADO work items
 - task: Veracode Flaw Importer@3
   displayName: Veracode Flaw Importer
-  enabled: true
+  enabled: false
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -117,7 +117,7 @@ steps:
 # This step will run an SCA Agent-Based Scan for 3rd party library vulnerabilities. 
 - task: CmdLine@2
   displayName: SCA Agent-Based Scan
-  enabled: true
+  enabled: false
   inputs:
     script: |
       export SCM_URI='https://Verademo-ADO'
@@ -148,13 +148,13 @@ steps:
 # This step will run a policy scan using our Java API Wrapper in case the ADO Veracode upload & scan extension doesn't work
 - task: Bash@3
   displayName: Policy Scan via API Wrapper Bash Script
-  enabled: false
+  enabled: true
   inputs:
     targetType: "inline"
     script: |
       curl -sSO https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/23.8.12.0/vosp-api-wrappers-java-23.8.12.0-dist.zip
       unzip -o vosp-api-wrappers-java-23.8.12.0-dist.zip
-      java -jar VeracodeJavaAPI.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -action uploadandscan -appname 'Verademo-Java' -createprofile false -filepath '$(build.artifactstagingdirectory)' -version 'Verademo-Policy-$(build.buildNumber)'
+      java -jar VeracodeJavaAPI.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -action uploadandscan -appname 'Verademo-Java' -createprofile false -filepath '$(build.artifactstagingdirectory)' -version 'Verademo-Policy-$(build.buildNumber)' -scanpollinginterval 120 -publishscansonly true
 
 # This step will run a local pipeline scan using our pipleine-scan.jar in case the ADO Veracode pipeline scan extension doesn't work
 # NOT NEEDED if using Veracode CLI to run the pipeline scan
