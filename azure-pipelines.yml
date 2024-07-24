@@ -154,7 +154,7 @@ steps:
     script: |
       curl -sSO https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/23.8.12.0/vosp-api-wrappers-java-23.8.12.0-dist.zip
       unzip -o vosp-api-wrappers-java-23.8.12.0-dist.zip
-      java -jar VeracodeJavaAPI.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -action uploadandscan -appname 'Verademo-Java' -createprofile false -filepath '$(build.artifactstagingdirectory)' -version 'Verademo-Policy-$(build.buildNumber)' -scanpollinginterval 120 -publishscansonly true
+      java -jar VeracodeJavaAPI.jar -vid $(VERACODE_API_ID) -vkey $(VERACODE_API_KEY) -action uploadandscan -appname 'Verademo-Java' -createprofile false -filepath '$(build.artifactstagingdirectory)' -version 'Verademo-Policy-$(build.buildNumber)' -scanpollinginterval 120 -publishedscansonly true
 
 # This step will run a local pipeline scan using our pipleine-scan.jar in case the ADO Veracode pipeline scan extension doesn't work
 # NOT NEEDED if using Veracode CLI to run the pipeline scan
