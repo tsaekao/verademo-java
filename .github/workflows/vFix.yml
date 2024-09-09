@@ -7,9 +7,10 @@ permissions:
 
 jobs:
   veracode_cli_scan:
-    name: Download Veracode CLI
+    name: Download Veracode CLI and Static Scan
     runs-on: ubuntu-latest
-
+    container:
+      image: adoptopenjdk:11-jdk-hotspot
     steps:
         - name: Download CLI
           uses: wei/curl@master
