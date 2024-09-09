@@ -47,6 +47,10 @@ jobs:
             vkey: ${{secrets.VERACODE_API_KEY}}
             file: "verademo.war" 
             fail_build: false
+        - uses: actions/upload-artifact@v4
+          with:
+            name: results.json
+            path: ./results.json
 
   veracode-fix:
     runs-on: ubuntu-latest
@@ -59,7 +63,7 @@ jobs:
       - name: get flaw file
         uses: actions/download-artifact@v4
         with:
-          name: Veracode Pipeline-Scan Results
+          name: results.json
           
       - name: Create fixes from static findings
         id: convert
