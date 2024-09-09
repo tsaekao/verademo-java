@@ -75,5 +75,5 @@ jobs:
           source_base_path_1: "src/main/com/veracode/verademo/controller/"
           # source_base_path_2: "WEB-INF:src/main/webapp/WEB-INF"
           language: java
-          prComment: true
+          prComment: false
           fixType: batch
