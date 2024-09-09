@@ -1,0 +1,52 @@
+name: Pipeline Scan and Veracode Fix
+on: workflow_dispatch
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  veracode_cli_scan:
+    name: Download Veracode CLI
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Download CLI
+          uses: wei/curl@master
+          with:
+            args: -fsS https://tools.veracode.com/veracode-cli/install | sh
+
+        - name: Auto-Package Application # Compiling the .war binary from the checked out repo source code to upload to the scanner in the next step
+          run: ./veracode package -s . -o veracode-artifact -a trust
+
+        - name: Run a static scan
+          run: ./veracode static scan veracode-artifact/verademo.war
+          env:
+            VERACODE_API_KEY_ID: ${{ secrets.VERACODE_API_ID }}
+            VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_API_KEY }}
+
+  veracode-fix:
+    runs-on: ubuntu-latest
+    needs: veracode_cli_scan
+    name: Veracode Fix
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: get flaw file
+        uses: actions/download-artifact@v4
+        with:
+          name: Veracode Pipeline-Scan Results
+          
+      - name: Create fixes from static findings
+        id: convert
+        uses: Veracode/veracode-fix@main
+        with:
+          inputFile: results.json
+          vid: ${{ secrets.VERACODE_API_ID }}
+          vkey: ${{ secrets.VERACODE_API_KEY }}
+          source_base_path_1: "com/:src/main/java/com/"
+          source_base_path_2: "WEB-INF:src/main/webapp/WEB-INF"
+          language: java
+          prComment: true
+          fixType: batch
