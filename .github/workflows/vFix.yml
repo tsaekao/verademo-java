@@ -72,8 +72,8 @@ jobs:
           inputFile: results.json
           vid: ${{secrets.VERACODE_API_ID}}
           vkey: ${{secrets.VERACODE_API_KEY}}
-          source_base_path_1: "com/:src/main/java/com/"
-          source_base_path_2: "WEB-INF:src/main/webapp/WEB-INF"
+          source_base_path_1: "src/main/com/veracode/verademo/controller/"
+          # source_base_path_2: "WEB-INF:src/main/webapp/WEB-INF"
           language: java
           prComment: true
           fixType: batch
