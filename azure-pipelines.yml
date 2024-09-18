@@ -75,7 +75,7 @@ steps:
 # This is NOT an official Veracode extension, but was created by someone within Veracode.
 - task: VeracodePipelineScan@0
   displayName: Pipeline Scan
-  enabled: false
+  enabled: true
   inputs:
     VeracodeAPIID: '$(VERACODE_API_ID)'
     VeracodeAPIsecret: '$(VERACODE_API_KEY)'
@@ -84,7 +84,7 @@ steps:
 # This step will run a Veracode static scan and upload the results to the Veracode platform using the Veracode upload & scan task.
 - task: Veracode@3
   displayName: Upload and Scan
-  enabled: false
+  enabled: true
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -148,7 +148,7 @@ steps:
 # This step will run a policy scan using our Java API Wrapper in case the ADO Veracode upload & scan extension doesn't work
 - task: Bash@3
   displayName: Policy Scan via API Wrapper Bash Script
-  enabled: true
+  enabled: false
   inputs:
     targetType: "inline"
     script: |
