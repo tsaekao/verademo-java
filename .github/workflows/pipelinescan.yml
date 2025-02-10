@@ -68,7 +68,7 @@ jobs:
         sarif_file: veracode-results.sarif
 
     - name: save filtered results file
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: filtered-results
         path: filtered_results.json
