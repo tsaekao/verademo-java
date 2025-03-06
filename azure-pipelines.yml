@@ -52,7 +52,7 @@ steps:
 # This step uses the Veracode CLI to auto-package my application
 - task: Bash@3
   displayName: Auto-Package
-  enabled: false
+  enabled: true
   inputs:
     targetType: "inline"
     script: |
@@ -63,7 +63,7 @@ steps:
 # Add || false to the end of the static scan command to fail the build based on findings
 - task: Bash@3
   displayName: CLI Scan
-  enabled: false
+  enabled: true
   inputs:
     targetType: "inline"
     script: |
@@ -84,7 +84,7 @@ steps:
 # This step will run a Veracode static scan and upload the results to the Veracode platform using the Veracode upload & scan task.
 - task: Veracode@3
   displayName: Upload and Scan
-  enabled: false
+  enabled: true
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
@@ -93,13 +93,13 @@ steps:
     filepath: '$(build.artifactstagingdirectory)'
     createSandBox: false # Set true to create sandbox, or false if sandbox is already created
     # sandboxName: 'Azure DevOps'
-    importResults: false # Set true if you want the SAST scan results in the console output
+    importResults: true # Set true if you want the SAST scan results in the console output
     maximumWaitTime: '360'
 
 # This step will import my flaws that violate policy as ADO work items
 - task: Veracode Flaw Importer@3
   displayName: Veracode Flaw Importer
-  enabled: true
+  enabled: false
   inputs:
     ConnectionDetailsSelection: 'Service Connection'
     AnalysisService: 'verademo'
