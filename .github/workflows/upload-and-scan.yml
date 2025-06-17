@@ -25,7 +25,7 @@ jobs:
       #  run: mvn -B package --file pom.xml
           
       - name: Veracode Upload And Scan
-        uses: veracode/veracode-uploadandscan-action@0.2.6
+        uses: veracode/veracode-uploadandscan-action@LATEST
         with:
           appname: 'Verademo-Java'
           createprofile: false
