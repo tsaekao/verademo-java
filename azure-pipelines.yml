@@ -62,7 +62,7 @@ steps:
 # This step will run a local static scan (pipeline scan) using the Veracode CLI
 # Add || false to the end of the static scan command to fail the build based on findings
 - task: Bash@3
-  displayName: CLI Scan
+  displayName: CLI SAST and DAST Scans
   enabled: true
   inputs:
     targetType: "inline"
@@ -70,6 +70,7 @@ steps:
       export VERACODE_API_KEY_ID=$(VERACODE_API_ID)
       export VERACODE_API_KEY_SECRET=$(VERACODE_API_KEY)
       ./veracode static scan '$(build.artifactstagingdirectory)'/verademo.war || true
+      ./veracode dynamic --webhook '$(WEBHOOK)'
 
 # This stepp will run a local static scan (pipeline scan) using the Veracode ADO Pipeline Scan Extension. 
 # This is NOT an official Veracode extension, but was created by someone within Veracode.
